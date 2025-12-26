@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 const env_schema = z.object({
+    API_PORT: z.coerce.number().default(3333),
     AWS_REGION: z.string(),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
@@ -10,6 +11,7 @@ const env_schema = z.object({
 })
 
 const variables = {
+    API_PORT: process.env.API_PORT,
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,

@@ -10,6 +10,7 @@ import { changePasswordRoute } from './routes/change_password'
 import { confirmForgotPasswordRoute } from './routes/confirm_forgot_password'
 import { respondToSoftwareTokenMfaChallengeRoute } from './routes/respond_to_software_token_mfa_challenge'
 import { respondToNewPasswordChallengeRoute } from './routes/respond_to_new_password_challenge'
+import { env } from './config/env'
 
 const fastify = Fastify({
   logger: false
@@ -18,8 +19,8 @@ const fastify = Fastify({
 fastify.setSerializerCompiler(serializerCompiler)
 fastify.setValidatorCompiler(validatorCompiler)
 
-fastify.get('/', function (request, reply) {
-  reply.send({ hello: 'world' })
+fastify.get('/', function (_, reply) {
+  reply.send({ ok: true, message: 'API online' })
 })
 
 fastify.register(signUpRoute)
@@ -33,12 +34,10 @@ fastify.register(confirmForgotPasswordRoute)
 fastify.register(respondToSoftwareTokenMfaChallengeRoute)
 fastify.register(respondToNewPasswordChallengeRoute)
 
-fastify.listen({ port: 3000 }, function (err, address) {
+fastify.listen({ port: env.API_PORT }, function (err) {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
   }
-  console.log('Server running in http://localhost:3000')  
-
-  // Server is now listening on ${address}
+  console.log(`Server running in http://localhost:${env.API_PORT}`)  
 })
