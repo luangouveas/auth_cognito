@@ -11,6 +11,7 @@ import { confirmForgotPasswordRoute } from './routes/confirm_forgot_password'
 import { respondToSoftwareTokenMfaChallengeRoute } from './routes/respond_to_software_token_mfa_challenge'
 import { respondToNewPasswordChallengeRoute } from './routes/respond_to_new_password_challenge'
 import { env } from './config/env'
+import { errorHandler } from './utils/server/error-handler'
 
 const fastify = Fastify({
   logger: false
@@ -18,6 +19,7 @@ const fastify = Fastify({
 
 fastify.setSerializerCompiler(serializerCompiler)
 fastify.setValidatorCompiler(validatorCompiler)
+fastify.setErrorHandler(errorHandler)
 
 fastify.get('/', function (_, reply) {
   reply.send({ ok: true, message: 'API online' })
