@@ -11,9 +11,9 @@ export default {
     /**
      * Cria um novo usuário no grupo de usuários especificado.
      */
-    admin_create_user: async (email: string) => {
+    admin_create_user: async (username: string) => {
         const cmd = new AdminCreateUserCommand({
-            Username: email,
+            Username: username,
             UserPoolId: env.COGNITO_USER_POOL_ID,
         })
         return await client.send(cmd)
@@ -22,12 +22,12 @@ export default {
     /**
      * Confirma a conta de um novo usuário.
      */
-    confirm_sign_up: async (email: string, code: string) => {
+    confirm_sign_up: async (username: string, code: string) => {
         const cmd = new ConfirmSignUpCommand({
             ClientId: env.COGNITO_APP_CLIENT_ID,
-            Username: email,
+            Username: username,
             ConfirmationCode: code,
-            SecretHash: generateSecretHash(email),
+            SecretHash: generateSecretHash(username),
         })
         return await client.send(cmd)
     },
@@ -35,14 +35,14 @@ export default {
     /**
      * Inicia um fluxo de autenticação.
      */
-    admin_initiate_auth: async (email: string, password: string) => {
+    admin_initiate_auth: async (username: string, password: string) => {
         const cmd = new AdminInitiateAuthCommand({
             UserPoolId: env.COGNITO_USER_POOL_ID,
             ClientId: env.COGNITO_APP_CLIENT_ID,
             AuthFlow: 'ADMIN_NO_SRP_AUTH',
             AuthParameters: {
-                SECRET_HASH: generateSecretHash(email),
-                USERNAME: email,
+                SECRET_HASH: generateSecretHash(username),
+                USERNAME: username,
                 PASSWORD: password,
             },
         })
@@ -52,11 +52,11 @@ export default {
     /**
      *  Envia um código de confirmação de redefinição de senha para o usuário. O método de entrega da mensagem é determinado pelos atributos disponíveis do usuário e pela AccountRecoverySettingconfiguração do grupo de usuários.
      * */
-    forgot_password: async (email: string) => {
+    forgot_password: async (username: string) => {
         const cmd = new ForgotPasswordCommand({
             ClientId: env.COGNITO_APP_CLIENT_ID,
-            Username: email,
-            SecretHash: generateSecretHash(email),
+            Username: username,
+            SecretHash: generateSecretHash(username),
         })
         return await client.send(cmd)
     },
@@ -64,13 +64,13 @@ export default {
     /**
      * Define uma nova senha escolhida pelo usuário através da confirmação de um código enviado previamente.
      */
-    confirm_forgot_password: async ({ email, code, password }: IConfirmForgotPassword) => {
+    confirm_forgot_password: async ({ username, code, password }: IConfirmForgotPassword) => {
         const cmd = new ConfirmForgotPasswordCommand({
             ClientId: env.COGNITO_APP_CLIENT_ID,
-            Username: email,
+            Username: username,
             ConfirmationCode: code,
             Password: password,
-            SecretHash: generateSecretHash(email),
+            SecretHash: generateSecretHash(username),
         })
         return await client.send(cmd)
     },
@@ -78,11 +78,11 @@ export default {
     /**
      * Reenvia o código que confirma uma nova conta para um usuário que se cadastrou no seu grupo de usuários.
      */
-    resend_confirmation_code: async (email: string) => {
+    resend_confirmation_code: async (username: string) => {
         const cmd = new ResendConfirmationCodeCommand({
             ClientId: env.COGNITO_APP_CLIENT_ID,
-            SecretHash: generateSecretHash(email),
-            Username: email,
+            SecretHash: generateSecretHash(username),
+            Username: username,
         })
         return await client.send(cmd)
     },
@@ -111,14 +111,14 @@ export default {
     /**
      * Realiza verificação do código gerado pelo software MFA
      */
-    respond_to_software_token_mfa_challenge: async ({ session, code, email }: IRespondToAuthChallenge) => {
+    respond_to_software_token_mfa_challenge: async ({ session, code, username }: IRespondToAuthChallenge) => {
         const cmd = new RespondToAuthChallengeCommand({
             ChallengeName: 'SOFTWARE_TOKEN_MFA',
             ClientId: env.COGNITO_APP_CLIENT_ID,
             Session: session,
             ChallengeResponses: {
                 SOFTWARE_TOKEN_MFA_CODE: code,
-                USERNAME: email,
+                USERNAME: username,
             }
             
         })
@@ -128,15 +128,15 @@ export default {
     /**
      * Define uma nova senha para o usuário após o primeiro login bem-sucedido
     */
-   respond_new_password_challenge: async ({ email, password, session }: IRespondNewPasswordChallenge) => {
+   respond_new_password_challenge: async ({ username, password, session }: IRespondNewPasswordChallenge) => {
        const cmd = new RespondToAuthChallengeCommand({
            ChallengeName: 'NEW_PASSWORD_REQUIRED',
            ClientId: env.COGNITO_APP_CLIENT_ID,
            Session: session,           
            ChallengeResponses: {
-                SECRET_HASH: generateSecretHash(email),
+                SECRET_HASH: generateSecretHash(username),
                 NEW_PASSWORD: password,
-                USERNAME: email,
+                USERNAME: username,
             }
         })
         return await client.send(cmd)
@@ -145,9 +145,9 @@ export default {
     /**
      * [Para uso de ADMIN] Inicia o processo de redefinição de senha de um usuário e define o status do usuário para "Forçar alteração de senha".
      */
-    admin_reset_user_password: async (email: string) => {
+    admin_reset_user_password: async (username: string) => {
         const cmd = new AdminResetUserPasswordCommand({
-            Username: email,
+            Username: username,
             UserPoolId: env.COGNITO_USER_POOL_ID,
         })
         return await client.send(cmd)

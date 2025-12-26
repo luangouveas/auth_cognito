@@ -9,21 +9,19 @@ export async function associateSoftwareTokenRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/associate_software_token', {
         schema: {
             body: z.object({
-                email: z.string().optional(),
+                username: z.string(),
+                appName: z.string(),
                 session: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { session, email } = request.body
+        const { session, username, appName } = request.body
 
         try {
-            // const result = await cognito.associate_software_token(session)
-
-            const appName = `Saúde Mental APP${email ? ' (' + email : ')'}`;
-            const userEmail = email || 'usuario';
-            const secret_code = 'result.SecretCode';
-
-            const otpauthUri = `otpauth://totp/${encodeURIComponent(appName)}:${encodeURIComponent(userEmail)}?secret=${secret_code}&issuer=${encodeURIComponent(appName)}&algorithm=SHA1&digits=6&period=30`;
+            const result = await cognito.associate_software_token(session)
+            const secret_code = result.SecretCode;
+            
+            const otpauthUri = `otpauth://totp/${encodeURIComponent(appName)}:${encodeURIComponent(username)}?secret=${secret_code}&issuer=${encodeURIComponent(appName)}&algorithm=SHA1&digits=6&period=30`;
 
             const qr_code = await qrcode.toDataURL(otpauthUri, {
                 margin: 3,
@@ -35,12 +33,11 @@ export async function associateSoftwareTokenRoute(fastify: FastifyInstance){
             //     console.log(qrcode)
             // })
 
-            return reply.status(200)
-            // .type('text/html').send(qrCode)
-            .send({
+            return reply.status(200).send({
                 ok: true,
                 data: {
-                    qr_code,
+                    ...result,
+                    qr_code
                 },
             })   
         } catch (error) {

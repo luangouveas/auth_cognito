@@ -7,16 +7,16 @@ export async function respondToNewPasswordChallengeRoute(fastify: FastifyInstanc
     fastify.withTypeProvider<ZodTypeProvider>().post('/respond_to_new_password_challenge', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
                 password: z.string(),
                 session: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { email, password, session } = request.body
+        const { username, password, session } = request.body
 
         try {
-            const result = await cognito.respond_new_password_challenge({ email, password, session })
+            const result = await cognito.respond_new_password_challenge({ username, password, session })
 
             return reply.status(200).send({
                 ok: true,

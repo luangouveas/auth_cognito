@@ -9,14 +9,14 @@ export async function respondToSoftwareTokenMfaChallengeRoute(fastify: FastifyIn
             body: z.object({
                 session: z.string(),
                 code: z.string(),
-                email: z.string(),
+                username: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { session, code, email } = request.body
+        const { session, code, username } = request.body
 
         try {
-            const result = await cognito.respond_to_software_token_mfa_challenge({ session, code, email })
+            const result = await cognito.respond_to_software_token_mfa_challenge({ session, code, username })
 
             return reply.status(200).send({
                 ok: true,

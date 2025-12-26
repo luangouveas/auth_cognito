@@ -7,14 +7,14 @@ export async function signUpRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/sign_up', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { email } = request.body
+        const { username } = request.body
 
         try {
-            const result = await cognito.admin_create_user(email)
+            const result = await cognito.admin_create_user(username)
 
             return reply.status(201).send({
                 ok: true,

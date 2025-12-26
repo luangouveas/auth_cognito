@@ -7,14 +7,14 @@ export async function adminResetUserPasswordRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/admin_reset_user_password', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { email } = request.body
+        const { username } = request.body
 
         try {
-            const result = await cognito.admin_reset_user_password(email)
+            const result = await cognito.admin_reset_user_password(username)
 
             return reply.status(204).send({
                 ok: true,

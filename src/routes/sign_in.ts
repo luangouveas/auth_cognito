@@ -7,15 +7,15 @@ export async function signInRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/sign_in', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
                 password: z.string()
             })
         }
     }, async (request, reply) => {
-        const { email, password } = request.body
+        const { username, password } = request.body
 
         try {
-            const result = await cognito.admin_initiate_auth(email, password)
+            const result = await cognito.admin_initiate_auth(username, password)
 
             return reply.status(200).send({
                 ok: true,

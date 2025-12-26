@@ -7,16 +7,16 @@ export async function confirmForgotPasswordRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/confirm_forgot_password', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
                 code: z.string(),
                 password: z.string()
             })
         }
     }, async (request, reply) => {
-        const { email, code, password } = request.body
+        const { username, code, password } = request.body
 
         try {
-            const result = await cognito.confirm_forgot_password({ email, code, password })
+            const result = await cognito.confirm_forgot_password({ username, code, password })
 
             return reply.status(204).send({
                 ok: true,

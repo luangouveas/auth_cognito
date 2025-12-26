@@ -1,17 +1,17 @@
 export interface IConfirmForgotPassword {
-    email: string,
+    username: string,
     code: string,
     password: string
 }
 
 export interface IRespondToAuthChallenge {
-    email: string,
+    username: string,
     code: string,
     session: string
 }
 
 export interface IRespondNewPasswordChallenge {
-    email: string,
+    username: string,
     password: string,
     session: string
 }

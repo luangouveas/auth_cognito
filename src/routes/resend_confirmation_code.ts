@@ -7,14 +7,14 @@ export async function resendConfirmationCodeRoute(fastify: FastifyInstance){
     fastify.withTypeProvider<ZodTypeProvider>().post('/resend_confirmation_code', {
         schema: {
             body: z.object({
-                email: z.string(),
+                username: z.string(),
             })
         }
     }, async (request, reply) => {
-        const { email } = request.body
+        const { username } = request.body
 
         try {
-            const result = await cognito.resend_confirmation_code(email)
+            const result = await cognito.resend_confirmation_code(username)
 
             return reply.status(200).send({
                 ok: true,
