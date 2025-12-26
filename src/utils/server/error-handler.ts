@@ -3,6 +3,7 @@ import { hasZodFastifySchemaValidationErrors, ResponseSerializationError } from 
 import { ZodError } from "zod";
 import { UnauthorizedError } from "./unauthorized-error";
 import { BadRequestError } from "./bad-request-error";
+import { CognitoIdentityProviderServiceException } from "@aws-sdk/client-cognito-identity-provider";
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
 
@@ -63,6 +64,14 @@ export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
         })
     }
 
+    if (error instanceof CognitoIdentityProviderServiceException){
+        return reply.status(error.$metadata.httpStatusCode || 500).send({
+            ok: false,
+            message: error.message,
+        })
+    }   
+
+    // console.log(error)
 
     return reply.status(500).send({
             ok: false,
