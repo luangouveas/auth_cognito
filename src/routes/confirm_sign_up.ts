@@ -9,27 +9,22 @@ export async function confirmSignUpRoute(fastify: FastifyInstance){
             body: z.object({
                 username: z.string(),
                 code: z.string()
-            })
+            }),
+            response: {
+                200: z.object({
+                    ok: z.literal(true),
+                    message: z.string()
+                })
+            }
         }
     }, async (request, reply) => {
         const { username, code } = request.body
+     
+        await cognito.confirm_sign_up(username, code)
 
-        try {
-            const result = await cognito.confirm_sign_up(username, code)
-
-            return reply.status(200).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'Erro ao confirmar o código.'
-
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
+        return reply.status(200).send({
+            ok: true,
+            message: 'Usuário comfirmado com sucesso.',
+        })   
     })
 }

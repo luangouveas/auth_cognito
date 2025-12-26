@@ -9,27 +9,28 @@ export async function signInRoute(fastify: FastifyInstance){
             body: z.object({
                 username: z.string(),
                 password: z.string()
-            })
+            }),
+            response: {
+                200: z.object({
+                    ok: z.literal(true),
+                    data: z.object({
+                        session: z.string().optional(),
+                        challengeName: z.string().optional(),
+                    })
+                })
+            }
         }
     }, async (request, reply) => {
         const { username, password } = request.body
 
-        try {
-            const result = await cognito.admin_initiate_auth(username, password)
+        const result = await cognito.admin_initiate_auth(username, password)
 
-            return reply.status(200).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'A autenticação falhou.'
-
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
+        return reply.status(200).send({
+            ok: true,
+            data: {
+                session: result.Session,
+                challengeName: result.ChallengeName
+            },
+        })   
     })
 }
