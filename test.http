@@ -1,0 +1,101 @@
+@API_PORT=3000
+
+###Sign-up
+POST http://localhost:{{API_PORT}}/sign_up HTTP/1.1
+Content-Type: application/json
+
+{
+   	"username": ""
+}
+
+
+###Confirm sign-up
+POST http://localhost:{{API_PORT}}/confirm_sign_up HTTP/1.1
+Content-Type: application/json
+
+{
+   	"username": "",
+    "code": ""
+}
+
+###Sign-in
+POST http://localhost:{{API_PORT}}/sign_in HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+	"password": ""
+}
+
+###Admin reset user password
+POST http://localhost:{{API_PORT}}/admin_reset_user_password HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+}
+
+###Forgot password
+POST http://localhost:{{API_PORT}}/forgot_password HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+}
+
+###Resend confirmation code
+POST http://localhost:{{API_PORT}}/resend_confirmation_code HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+}
+
+###Confirm forgot passowrd
+POST http://localhost:{{API_PORT}}/confirm_forgot_password HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+    "code": "",
+	"password": ""
+}
+
+###Change password
+POST http://localhost:{{API_PORT}}/change_password HTTP/1.1
+Content-Type: application/json
+
+{
+	"access_token": "",
+	"previus_password": "",
+	"new_password": ""
+}
+
+###Associate software token
+POST http://localhost:{{API_PORT}}/associate_software_token HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+	"session": ""
+}
+
+###Respond to software token mfa challenge
+POST http://localhost:{{API_PORT}}/respond_to_new_password_challenge HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+	"session": "",
+    "code": ""
+}
+
+###Respond to new password challenge
+POST http://localhost:{{API_PORT}}/respond_to_new_password_challenge HTTP/1.1
+Content-Type: application/json
+
+{
+	"username": "",
+	"session": "",
+    "password": ""
+}
