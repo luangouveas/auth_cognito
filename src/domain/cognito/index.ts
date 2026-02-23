@@ -113,7 +113,7 @@ export default {
      */
     respond_to_software_token_mfa_challenge: async ({ session, code, username }: IRespondToAuthChallenge) => {
         const cmd = new RespondToAuthChallengeCommand({
-            ChallengeName: 'SOFTWARE_TOKEN_MFA',
+            ChallengeName: 'MFA_SETUP',
             ClientId: env.COGNITO_APP_CLIENT_ID,
             Session: session,
             ChallengeResponses: {
