@@ -10,27 +10,23 @@ export async function changePasswordRoute(fastify: FastifyInstance){
                 access_token: z.string(),
                 previus_password: z.string(),
                 new_password: z.string(),
-            })
+            }),
+            response: {
+                204: z.object({
+                    ok: z.literal(true),
+                    message: z.string()
+                })
+            }
         }
     }, async (request, reply) => {
         const { access_token, previus_password, new_password } = request.body
 
-        try {
-            const result = await cognito.change_password({ access_token, previus_password, new_password })
+        await cognito.change_password({ access_token, previus_password, new_password })
 
-            return reply.status(204).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'Erro ao atualizar a senha do usuário.'
+        return reply.status(204).send({
+            ok: true,
+            message: 'Senha alterada com sucesso.',
+        })   
 
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
     })
 }

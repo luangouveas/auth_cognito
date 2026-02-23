@@ -8,27 +8,22 @@ export async function forgotPasswordRoute(fastify: FastifyInstance){
         schema: {
             body: z.object({
                 username: z.string(),
-            })
+            }),
+            response: {
+                200: z.object({
+                    ok: z.literal(true),
+                    message: z.string()
+                })
+            }
         }
     }, async (request, reply) => {
         const { username } = request.body
 
-        try {
-            const result = await cognito.forgot_password(username)
+        await cognito.forgot_password(username)
 
-            return reply.status(200).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'Erro ao tentar recuperar a conta.'
-
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
+        return reply.status(200).send({
+            ok: true,
+            message: 'Solicitação de recuperação de senha enviada com sucesso.',
+        })   
     })
 }

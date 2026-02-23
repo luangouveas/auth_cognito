@@ -10,27 +10,27 @@ export async function respondToSoftwareTokenMfaChallengeRoute(fastify: FastifyIn
                 session: z.string(),
                 code: z.string(),
                 username: z.string(),
-            })
+            }),
+            response: {
+                200: z.object({
+                    ok: z.literal(true),
+                    data: z.object({
+                        session: z.string().optional(),
+                    })
+                })
+            }
         }
     }, async (request, reply) => {
         const { session, code, username } = request.body
+    
+        const result = await cognito.respond_to_software_token_mfa_challenge({ session, code, username })
 
-        try {
-            const result = await cognito.respond_to_software_token_mfa_challenge({ session, code, username })
+        return reply.status(200).send({
+            ok: true,
+            data: {
+                session: result.Session
+            }
+        })   
 
-            return reply.status(200).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'Erro ao realizar a confirmação do código de acesso.'
-
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
     })
 }

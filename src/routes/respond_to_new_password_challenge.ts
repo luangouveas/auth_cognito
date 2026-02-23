@@ -10,27 +10,27 @@ export async function respondToNewPasswordChallengeRoute(fastify: FastifyInstanc
                 username: z.string(),
                 password: z.string(),
                 session: z.string(),
-            })
+            }),
+            response: {
+                200: z.object({
+                    ok: z.literal(true),
+                    data: z.object({
+                        session: z.string().optional(),
+                    })
+                })
+            }
         }
     }, async (request, reply) => {
         const { username, password, session } = request.body
 
-        try {
-            const result = await cognito.respond_new_password_challenge({ username, password, session })
+        const result = await cognito.respond_new_password_challenge({ username, password, session })
 
-            return reply.status(200).send({
-                ok: true,
-                data: result,
-            })   
-        } catch (error) {
-            let message = 'Erro ao definir nova senha para o usuário.'
+        return reply.status(200).send({
+            ok: true,
+            data: {
+                session: result.Session
+            },
+        }) 
 
-            if (error instanceof Error) message = error.message
-            
-            return reply.status(400).send({
-                ok: false,
-                message
-            })
-        }
     })
 }

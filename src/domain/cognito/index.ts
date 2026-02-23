@@ -1,4 +1,4 @@
-import { AdminCreateUserCommand, AdminInitiateAuthCommand, AdminResetUserPasswordCommand, AdminSetUserPasswordCommand, AssociateSoftwareTokenCommand, ChangePasswordCommand, CognitoIdentityProviderClient, ConfirmForgotPasswordCommand, ConfirmSignUpCommand, ForgotPasswordCommand, ResendConfirmationCodeCommand, RespondToAuthChallengeCommand, VerifySoftwareTokenCommand } from '@aws-sdk/client-cognito-identity-provider'
+import { AdminCreateUserCommand, AdminInitiateAuthCommand, AdminResetUserPasswordCommand, AssociateSoftwareTokenCommand, ChangePasswordCommand, CognitoIdentityProviderClient, ConfirmForgotPasswordCommand, ConfirmSignUpCommand, ForgotPasswordCommand, ResendConfirmationCodeCommand, RespondToAuthChallengeCommand, VerifySoftwareTokenCommand } from '@aws-sdk/client-cognito-identity-provider'
 import { generateSecretHash } from "@/utils";
 import { env } from '@/config/env';
 import { IChangePassword, IConfirmForgotPassword, IRespondNewPasswordChallenge, IRespondToAuthChallenge } from './contracts';
@@ -10,11 +10,13 @@ const client = new CognitoIdentityProviderClient({
 export default {
     /**
      * Cria um novo usuário no grupo de usuários especificado.
+     * @param resend_temporary_password Se verdadeiro, será reenviado e-mail contendo a senha de acesso temporária. Se falso ou omitido, será realizada a tentativa de criação do usuário.
      */
-    admin_create_user: async (username: string) => {
+    admin_create_user: async (username: string, resend_temporary_password: boolean = false) => {
         const cmd = new AdminCreateUserCommand({
             Username: username,
             UserPoolId: env.COGNITO_USER_POOL_ID,
+            MessageAction: resend_temporary_password ? 'RESEND' : undefined,
         })
         return await client.send(cmd)
     },
@@ -163,7 +165,7 @@ export default {
             ProposedPassword: new_password
         })
         return await client.send(cmd)
-    },    
+    }
 
 
 }

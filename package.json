@@ -13,7 +13,6 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.957.0",
     "fastify": "^5.6.2",
     "fastify-type-provider-zod": "^6.1.0",
-    "openid-client": "^6.8.1",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "zod": "^4.2.1"
